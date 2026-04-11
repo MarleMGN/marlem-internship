@@ -18,8 +18,6 @@ const HotCollections = () => {
     speed: 500,
     slidesToShow: 4,
     slidesToScroll: 1,
-    nextArrow: <i className="fa fa-chevron-right" />,
-    prevArrow: <i className="fa fa-chevron-left" />,
     responsive: [
       { breakpoint: 1024, settings: { slidesToShow: 3 } },
       { breakpoint: 768, settings: { slidesToShow: 2 } },
