@@ -42,6 +42,14 @@ const HotCollections = () => {
     fetchCollections();
   }, []);
 
+  useEffect(() => {
+    if (!loading) {
+      setTimeout(() => {
+        window.dispatchEvent(new Event("resize"));
+      }, 0);
+    }
+  }, [loading]);
+
   return (
     <section id="section-collections" className="no-bottom">
       <div className="container">
@@ -56,9 +64,13 @@ const HotCollections = () => {
             <Slider {...settings}>
               {loading
                 ? new Array(4).fill(0).map((_, index) => (
-                  <div style={{ padding: "0 10px" }} key={index}>
-                    <Skeleton width="200px" height="200px" borderRadius="10px" />
-                  </div>
+                    <div style={{ padding: "0 10px" }} key={index}>
+                      <Skeleton
+                        width="249px"
+                        height="200px"
+                        borderRadius="10px"
+                      />
+                    </div>
                   ))
                 : collections.map((collection) => (
                     <div style={{ padding: "0 10px" }} key={collection.id}>
