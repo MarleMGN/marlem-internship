@@ -6,7 +6,6 @@ import axios from "axios";
 import Slider from "react-slick";
 import Skeleton from "../UI/Skeleton";
 
-
 const API_URL =
   "https://us-central1-nft-cloud-functions.cloudfunctions.net/hotCollections";
 
@@ -31,8 +30,11 @@ const HotCollections = () => {
     const fetchCollections = async () => {
       try {
         const res = await axios.get(API_URL);
-        setCollections(res.data);
-        setLoading(false);
+
+        setTimeout(() => {
+          setCollections(res.data);
+          setLoading(false);
+        }, 1500);
       } catch (err) {
         console.error(err);
       }
@@ -50,42 +52,47 @@ const HotCollections = () => {
               <div className="small-border bg-color-2"></div>
             </div>
           </div>
-          {loading ? <Skeleton /> : <div className="col-lg-12">
+          <div className="col-lg-12">
             <Slider {...settings}>
-              {collections.map((collection) => (
-                <div style={{ padding: "0 10px" }} key={collection.id}>
-                  <div className="nft_coll">
-                    <div className="nft_wrap">
-                      <Link to="/item-details">
-                        <img
-                          src={collection.nftImage}
-                          className="lazy img-fluid"
-                          alt=""
-                        />
-                      </Link>
-                    </div>
-                    <div className="nft_coll_pp">
-                      <Link to="/author">
-                        <img
-                          className="lazy pp-coll"
-                          src={collection.authorImage}
-                          alt=""
-                        />
-                      </Link>
-                      <i className="fa fa-check"></i>
-                    </div>
-                    <div className="nft_coll_info">
-                      <Link to="/explore">
-                        <h4>{collection.title}</h4>
-                      </Link>
-                      <span>{collection.code}</span>
-                    </div>
+              {loading
+                ? new Array(4).fill(0).map((_, index) => (
+                  <div style={{ padding: "0 10px" }} key={index}>
+                    <Skeleton width="200px" height="200px" borderRadius="10px" />
                   </div>
-                </div>
-              ))}
+                  ))
+                : collections.map((collection) => (
+                    <div style={{ padding: "0 10px" }} key={collection.id}>
+                      <div className="nft_coll">
+                        <div className="nft_wrap">
+                          <Link to="/item-details">
+                            <img
+                              src={collection.nftImage}
+                              className="lazy img-fluid"
+                              alt=""
+                            />
+                          </Link>
+                        </div>
+                        <div className="nft_coll_pp">
+                          <Link to="/author">
+                            <img
+                              className="lazy pp-coll"
+                              src={collection.authorImage}
+                              alt=""
+                            />
+                          </Link>
+                          <i className="fa fa-check"></i>
+                        </div>
+                        <div className="nft_coll_info">
+                          <Link to="/explore">
+                            <h4>{collection.title}</h4>
+                          </Link>
+                          <span>{collection.code}</span>
+                        </div>
+                      </div>
+                    </div>
+                  ))}
             </Slider>
-          </div>}
-          
+          </div>
         </div>
       </div>
     </section>
