@@ -1,11 +1,33 @@
 import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import AuthorImage from "../../images/author_thumbnail.jpg";
-import nftImage from "../../images/nftImage.jpg";
 import axios from "axios";
 
-const API_URL =
-  "https://us-central1-nft-cloud-functions.cloudfunctions.net/newItems";
+const API_URL = "https://us-central1-nft-cloud-functions.cloudfunctions.net/newItems";
+
+const Countdown = ({ expiryDate }) => {
+  const [timeLeft, setTimeLeft] = useState(
+    Math.floor((expiryDate - Date.now()) / 1000)
+  );
+
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setTimeLeft((prev) => prev - 1);
+    }, 1000);
+    return () => clearInterval(timer);
+  }, []);
+
+  if (timeLeft <= 0) return null;
+
+  const hours = Math.floor(timeLeft / 3600);
+  const minutes = Math.floor((timeLeft % 3600) / 60);
+  const seconds = timeLeft % 60;
+
+  return (
+    <div className="de_countdown">
+      {hours}h {minutes}m {seconds}s
+    </div>
+  );
+};
 
 const NewItems = () => {
   const [items, setItems] = useState([]);
@@ -15,7 +37,6 @@ const NewItems = () => {
       try {
         const res = await axios.get(API_URL);
         setItems(res.data);
-        console.log(res.data);
       } catch (err) {
         console.error(err);
       }
@@ -33,70 +54,60 @@ const NewItems = () => {
               <div className="small-border bg-color-2"></div>
             </div>
           </div>
-          {items.map((item) => {
-            const count = Math.floor(
-              (item.expiryDate - Date.now()) / 1000 / 60,
-            );
-            return (
-              <div
-                className="col-lg-3 col-md-6 col-sm-6 col-xs-12"
-                key={item.id}
-              >
-                <div className="nft__item">
-                  <div className="author_list_pp">
-                    <Link
-                      to="/author"
-                      data-bs-toggle="tooltip"
-                      data-bs-placement="top"
-                      title="Creator: Monica Lucas"
-                    >
-                      <img className="lazy" src={item.authorImage} alt="" />
-                      <i className="fa fa-check"></i>
-                    </Link>
-                  </div>
-                  <div className="de_countdown">{count}</div>
-
-                  <div className="nft__item_wrap">
-                    <div className="nft__item_extra">
-                      <div className="nft__item_buttons">
-                        <button>Buy Now</button>
-                        <div className="nft__item_share">
-                          <h4>Share</h4>
-                          <a href="" target="_blank" rel="noreferrer">
-                            <i className="fa fa-facebook fa-lg"></i>
-                          </a>
-                          <a href="" target="_blank" rel="noreferrer">
-                            <i className="fa fa-twitter fa-lg"></i>
-                          </a>
-                          <a href="">
-                            <i className="fa fa-envelope fa-lg"></i>
-                          </a>
-                        </div>
+          {items.map((item) => (
+            <div className="col-lg-3 col-md-6 col-sm-6 col-xs-12" key={item.id}>
+              <div className="nft__item">
+                <div className="author_list_pp">
+                  <Link
+                    to="/author"
+                    data-bs-toggle="tooltip"
+                    data-bs-placement="top"
+                    title="Creator: Monica Lucas"
+                  >
+                    <img className="lazy" src={item.authorImage} alt="" />
+                    <i className="fa fa-check"></i>
+                  </Link>
+                </div>
+                <Countdown expiryDate={item.expiryDate} />
+                <div className="nft__item_wrap">
+                  <div className="nft__item_extra">
+                    <div className="nft__item_buttons">
+                      <button>Buy Now</button>
+                      <div className="nft__item_share">
+                        <h4>Share</h4>
+                        <a href="" target="_blank" rel="noreferrer">
+                          <i className="fa fa-facebook fa-lg"></i>
+                        </a>
+                        <a href="" target="_blank" rel="noreferrer">
+                          <i className="fa fa-twitter fa-lg"></i>
+                        </a>
+                        <a href="">
+                          <i className="fa fa-envelope fa-lg"></i>
+                        </a>
                       </div>
                     </div>
-
-                    <Link to="/item-details">
-                      <img
-                        src={item.nftImage}
-                        className="lazy nft__item_preview"
-                        alt=""
-                      />
-                    </Link>
                   </div>
-                  <div className="nft__item_info">
-                    <Link to="/item-details">
-                      <h4>{item.title}</h4>
-                    </Link>
-                    <div className="nft__item_price">{item.price} ETH</div>
-                    <div className="nft__item_like">
-                      <i className="fa fa-heart"></i>
-                      <span>69</span>
-                    </div>
+                  <Link to="/item-details">
+                    <img
+                      src={item.nftImage}
+                      className="lazy nft__item_preview"
+                      alt=""
+                    />
+                  </Link>
+                </div>
+                <div className="nft__item_info">
+                  <Link to="/item-details">
+                    <h4>{item.title}</h4>
+                  </Link>
+                  <div className="nft__item_price">{item.price} ETH</div>
+                  <div className="nft__item_like">
+                    <i className="fa fa-heart"></i>
+                    <span>69</span>
                   </div>
                 </div>
               </div>
-            );
-          })}
+            </div>
+          ))}
         </div>
       </div>
     </section>

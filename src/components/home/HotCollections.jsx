@@ -4,6 +4,7 @@ import AuthorImage from "../../images/author_thumbnail.jpg";
 import nftImage from "../../images/nftImage.jpg";
 import axios from "axios";
 import Slider from "react-slick";
+import Skeleton from "../UI/Skeleton";
 
 
 const API_URL =
@@ -11,6 +12,7 @@ const API_URL =
 
 const HotCollections = () => {
   const [collections, setCollections] = useState([]);
+  const [loading, setLoading] = useState(true);
 
   const settings = {
     dots: true,
@@ -30,6 +32,7 @@ const HotCollections = () => {
       try {
         const res = await axios.get(API_URL);
         setCollections(res.data);
+        setLoading(false);
       } catch (err) {
         console.error(err);
       }
@@ -47,7 +50,7 @@ const HotCollections = () => {
               <div className="small-border bg-color-2"></div>
             </div>
           </div>
-          <div className="col-lg-12">
+          {loading ? <Skeleton /> : <div className="col-lg-12">
             <Slider {...settings}>
               {collections.map((collection) => (
                 <div style={{ padding: "0 10px" }} key={collection.id}>
@@ -81,7 +84,8 @@ const HotCollections = () => {
                 </div>
               ))}
             </Slider>
-          </div>
+          </div>}
+          
         </div>
       </div>
     </section>
