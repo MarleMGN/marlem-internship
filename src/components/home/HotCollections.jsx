@@ -1,7 +1,9 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import axios from "axios";
-import Slider from "react-slick";
+import OwlCarousel from "react-owl-carousel";
+import "owl.carousel/dist/assets/owl.carousel.css";
+import "owl.carousel/dist/assets/owl.theme.default.css";
 import Skeleton from "../UI/Skeleton";
 
 const API_URL =
@@ -10,42 +12,43 @@ const API_URL =
 const HotCollections = () => {
   const [collections, setCollections] = useState([]);
   const [loading, setLoading] = useState(true);
-  const sliderRef = useRef(null);
+  const [viewportWidth, setViewportWidth] = useState(window.innerWidth);
+
+  const options = {
+    loop: true,
+    margin: 10,
+    nav: true,
+    dots: true,
+    responsive: {
+      0: { items: 1 },
+      480: { items: 2 },
+      768: { items: 3 },
+      1024: { items: 4 },
+    },
+  };
+
 
   useEffect(() => {
     const onResize = () => setViewportWidth(window.innerWidth);
     window.addEventListener("resize", onResize);
-    document.addEventListener("fullscreenchange", onResize);
-    onResize();
-    return () => {
-      window.removeEventListener("resize", onResize);
-      document.removeEventListener("fullscreenchange", onResize);
-    };
+    return () => window.removeEventListener("resize", onResize);
   }, []);
 
-  const settings = {
-    dots: true,
-    infinite: true,
-    speed: 500,
-    slidesToShow: 1,
-    slidesToScroll: 1,
-    mobileFirst: true,
-    responsive: [
-      { breakpoint: 480, settings: { slidesToShow: 2 } },
-      { breakpoint: 768, settings: { slidesToShow: 3 } },
-      { breakpoint: 1024, settings: { slidesToShow: 4 } },
-    ],
-  };
+  const skeletonCount =
+    viewportWidth < 480
+      ? 1
+      : viewportWidth < 768
+        ? 2
+        : viewportWidth < 1024
+          ? 3
+          : 4;
 
   useEffect(() => {
     const fetchCollections = async () => {
       try {
         const res = await axios.get(API_URL);
-
-        setTimeout(() => {
-          setCollections(res.data);
-          setLoading(false);
-        }, 1500);
+        setCollections(res.data);
+        setLoading(false);
       } catch (err) {
         console.error(err);
       }
@@ -54,67 +57,58 @@ const HotCollections = () => {
     fetchCollections();
   }, []);
 
-  useEffect(() => {
-    if (!loading && collections.length > 0 && sliderRef.current) {
-      const id = requestAnimationFrame(() => {
-        sliderRef.current.innerSlider?.onWindowResized?.() 
-      });
-      return () => cancelAnimationFrame(id);
-    }
-  }, [loading, collections.length]);
-
   return (
     <section id="section-collections" className="no-bottom">
       <div className="container">
-          <div className="text-center">
-            <h2>Hot Collections</h2>
-            <div className="small-border bg-color-2"></div>
-          </div>
-          <div>
-            {loading ? (
-              new Array(4).fill(0).map((_, index) => (
-                <div style={{ padding: "0 10px" }} key={index}>
+        <div className="text-center">
+          <h2>Hot Collections</h2>
+          <div className="small-border bg-color-2"></div>
+        </div>
+        <div>
+          {loading ? (
+            <div className="row">
+              {new Array(skeletonCount).fill(0).map((_, index) => (
+                <div className="col-lg-3 col-md-4 col-sm-6" key={index}>
                   <Skeleton width="100%" height="300px" borderRadius="10px" />
                 </div>
-              ))
-            ) : (
-              <Slider key={slidesToShow} ref={sliderRef} {...settings}>
-                {collections.map((collection) => (
-                  <div style={{ padding: "0 10px" }} key={collection.id}>
-                    <div className="nft_coll">
-                      <div className="nft_wrap">
-                        <Link to="/item-details">
-                          <img
-                            src={collection.nftImage}
-                            className="lazy img-fluid"
-                            alt=""
-                          />
-                        </Link>
-                      </div>
-
-                      <div className="nft_coll_pp">
-                        <Link to="/author">
-                          <img
-                            className="lazy pp-coll"
-                            src={collection.authorImage}
-                            alt=""
-                          />
-                        </Link>
-                        <i className="fa fa-check"></i>
-                      </div>
-
-                      <div className="nft_coll_info">
-                        <Link to="/explore">
-                          <h4>{collection.title}</h4>
-                        </Link>
-                        <span>{collection.code}</span>
-                      </div>
+              ))}
+            </div>
+          ) : (
+            <OwlCarousel {...options}>
+              {collections.map((collection) => (
+                <div style={{ padding: "0 10px" }} key={collection.id}>
+                  <div className="nft_coll">
+                    <div className="nft_wrap">
+                      <Link to="/item-details">
+                        <img
+                          src={collection.nftImage}
+                          className="lazy img-fluid"
+                          alt=""
+                        />
+                      </Link>
+                    </div>
+                    <div className="nft_coll_pp">
+                      <Link to="/author">
+                        <img
+                          className="lazy pp-coll"
+                          src={collection.authorImage}
+                          alt=""
+                        />
+                      </Link>
+                      <i className="fa fa-check"></i>
+                    </div>
+                    <div className="nft_coll_info">
+                      <Link to="/explore">
+                        <h4>{collection.title}</h4>
+                      </Link>
+                      <span>{collection.code}</span>
                     </div>
                   </div>
-                ))}
-              </Slider>
-            )}
-          </div>
+                </div>
+              ))}
+            </OwlCarousel>
+          )}
+        </div>
       </div>
     </section>
   );
