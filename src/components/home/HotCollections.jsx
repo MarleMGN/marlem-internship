@@ -1,7 +1,5 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { Link } from "react-router-dom";
-import AuthorImage from "../../images/author_thumbnail.jpg";
-import nftImage from "../../images/nftImage.jpg";
 import axios from "axios";
 import Slider from "react-slick";
 import Skeleton from "../UI/Skeleton";
@@ -12,6 +10,7 @@ const API_URL =
 const HotCollections = () => {
   const [collections, setCollections] = useState([]);
   const [loading, setLoading] = useState(true);
+  const sliderRef = useRef(null);
 
   const settings = {
     dots: true,
@@ -39,73 +38,71 @@ const HotCollections = () => {
         console.error(err);
       }
     };
+
     fetchCollections();
   }, []);
 
   useEffect(() => {
-    if (!loading) {
-      setTimeout(() => {
-        window.dispatchEvent(new Event("resize"));
-      }, 0);
+    if (!loading && collections.length > 0 && sliderRef.current) {
+      const id = requestAnimationFrame(() => {
+        sliderRef.current.innerSlider?.onWindowResized?.() 
+      });
+      return () => cancelAnimationFrame(id);
     }
-  }, [loading]);
+  }, [loading, collections.length]);
 
   return (
     <section id="section-collections" className="no-bottom">
       <div className="container">
-        <div className="row">
-          <div className="col-lg-12">
-            <div className="text-center">
-              <h2>Hot Collections</h2>
-              <div className="small-border bg-color-2"></div>
-            </div>
+          <div className="text-center">
+            <h2>Hot Collections</h2>
+            <div className="small-border bg-color-2"></div>
           </div>
-          <div className="col-lg-12">
-            <Slider {...settings}>
-              {loading
-                ? new Array(4).fill(0).map((_, index) => (
-                    <div style={{ padding: "0 10px" }} key={index}>
-                      <Skeleton
-                        width="249px"
-                        height="200px"
-                        borderRadius="10px"
-                      />
-                    </div>
-                  ))
-                : collections.map((collection) => (
-                    <div style={{ padding: "0 10px" }} key={collection.id}>
-                      <div className="nft_coll">
-                        <div className="nft_wrap">
-                          <Link to="/item-details">
-                            <img
-                              src={collection.nftImage}
-                              className="lazy img-fluid"
-                              alt=""
-                            />
-                          </Link>
-                        </div>
-                        <div className="nft_coll_pp">
-                          <Link to="/author">
-                            <img
-                              className="lazy pp-coll"
-                              src={collection.authorImage}
-                              alt=""
-                            />
-                          </Link>
-                          <i className="fa fa-check"></i>
-                        </div>
-                        <div className="nft_coll_info">
-                          <Link to="/explore">
-                            <h4>{collection.title}</h4>
-                          </Link>
-                          <span>{collection.code}</span>
-                        </div>
+          <div>
+            {loading ? (
+              new Array(4).fill(0).map((_, index) => (
+                <div style={{ padding: "0 10px" }} key={index}>
+                  <Skeleton width="100%" height="300px" borderRadius="10px" />
+                </div>
+              ))
+            ) : (
+              <Slider ref={sliderRef} {...settings}>
+                {collections.map((collection) => (
+                  <div style={{ padding: "0 10px" }} key={collection.id}>
+                    <div className="nft_coll">
+                      <div className="nft_wrap">
+                        <Link to="/item-details">
+                          <img
+                            src={collection.nftImage}
+                            className="lazy img-fluid"
+                            alt=""
+                          />
+                        </Link>
+                      </div>
+
+                      <div className="nft_coll_pp">
+                        <Link to="/author">
+                          <img
+                            className="lazy pp-coll"
+                            src={collection.authorImage}
+                            alt=""
+                          />
+                        </Link>
+                        <i className="fa fa-check"></i>
+                      </div>
+
+                      <div className="nft_coll_info">
+                        <Link to="/explore">
+                          <h4>{collection.title}</h4>
+                        </Link>
+                        <span>{collection.code}</span>
                       </div>
                     </div>
-                  ))}
-            </Slider>
+                  </div>
+                ))}
+              </Slider>
+            )}
           </div>
-        </div>
       </div>
     </section>
   );
