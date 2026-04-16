@@ -12,6 +12,17 @@ const HotCollections = () => {
   const [loading, setLoading] = useState(true);
   const sliderRef = useRef(null);
 
+  useEffect(() => {
+    const onResize = () => setViewportWidth(window.innerWidth);
+    window.addEventListener("resize", onResize);
+    document.addEventListener("fullscreenchange", onResize);
+    onResize();
+    return () => {
+      window.removeEventListener("resize", onResize);
+      document.removeEventListener("fullscreenchange", onResize);
+    };
+  }, []);
+
   const settings = {
     dots: true,
     infinite: true,
@@ -20,9 +31,9 @@ const HotCollections = () => {
     slidesToScroll: 1,
     mobileFirst: true,
     responsive: [
-      { breakpoint: 1024, settings: { slidesToShow: 3 } },
-      { breakpoint: 768, settings: { slidesToShow: 2 } },
-      { breakpoint: 480, settings: { slidesToShow: 1 } },
+      { breakpoint: 480, settings: { slidesToShow: 2 } },
+      { breakpoint: 768, settings: { slidesToShow: 3 } },
+      { breakpoint: 1024, settings: { slidesToShow: 4 } },
     ],
   };
 
@@ -67,7 +78,7 @@ const HotCollections = () => {
                 </div>
               ))
             ) : (
-              <Slider ref={sliderRef} {...settings}>
+              <Slider key={slidesToShow} ref={sliderRef} {...settings}>
                 {collections.map((collection) => (
                   <div style={{ padding: "0 10px" }} key={collection.id}>
                     <div className="nft_coll">
