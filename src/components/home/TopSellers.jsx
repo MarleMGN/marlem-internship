@@ -42,6 +42,7 @@ const TopSellers = () => {
                   <li key={index}>
                     <div className="author_list_pp">
                       <Skeleton width="50px" height="50px" borderRadius="50%" />
+                      <i className="fa fa-check"></i>
                     </div>
                     <div className="author_list_info">
                       <Skeleton

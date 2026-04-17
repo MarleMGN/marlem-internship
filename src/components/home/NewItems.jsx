@@ -53,12 +53,12 @@ const NewItems = () => {
   };
 
   useEffect(() => {
-      const onResize = () => setViewportWidth(window.innerWidth);
-      window.addEventListener("resize", onResize);
-      return () => window.removeEventListener("resize", onResize);
-    }, []);
+    const onResize = () => setViewportWidth(window.innerWidth);
+    window.addEventListener("resize", onResize);
+    return () => window.removeEventListener("resize", onResize);
+  }, []);
 
-    const skeletonCount =
+  const skeletonCount =
     viewportWidth < 480
       ? 1
       : viewportWidth < 768
@@ -91,19 +91,41 @@ const NewItems = () => {
               <div className="small-border bg-color-2"></div>
             </div>
           </div>
-          {loading
-            ? Array(skeletonCount)
+          {loading ? (
+            <OwlCarousel key="loading" {...options}>
+              {Array(skeletonCount)
                 .fill(0)
                 .map((_, index) => (
-                  <div className="col-lg-3 col-md-4 col-sm-6" key={index}>
-                    <Skeleton width="100%" height="300px" borderRadius="10px" />
+                  <div key={index} className="nft__item">
+                    <div className="author_list_pp">
+                      <Skeleton
+                        height="50px"
+                        width="50px"
+                        borderRadius="50%"
+                      />
+                      <i className="fa fa-check"></i>
+                    </div>
+                    <div>
+                      <Skeleton width="100%" height="350px" />
+                    </div>
+                    <div className="nft__item_info">
+                      <h4>
+                        <Skeleton width="140px" height="25px" />
+                      </h4>
+                      <div className="nft__item_price">
+                        <Skeleton width="50px" height="15px" />
+                      </div>
+                      <div className="nft__item_like">
+                        <Skeleton width="15px" height="10px" />
+                      </div>
+                    </div>
                   </div>
-                ))
-            : ( <OwlCarousel {...options}>
+                ))}
+            </OwlCarousel>
+          ) : (
+            <OwlCarousel key="loaded" {...options}>
               {items.map((item) => (
-                <div
-                  key={item.id}
-                >
+                <div key={item.id}>
                   <div className="nft__item">
                     <div className="author_list_pp">
                       <Link
@@ -156,8 +178,8 @@ const NewItems = () => {
                   </div>
                 </div>
               ))}
-            </OwlCarousel> 
-            )}
+            </OwlCarousel>
+          )}
         </div>
       </div>
     </section>
