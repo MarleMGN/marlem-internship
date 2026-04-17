@@ -27,7 +27,6 @@ const HotCollections = () => {
     },
   };
 
-
   useEffect(() => {
     const onResize = () => setViewportWidth(window.innerWidth);
     window.addEventListener("resize", onResize);
@@ -48,7 +47,7 @@ const HotCollections = () => {
       try {
         const res = await axios.get(API_URL);
         setCollections(res.data);
-        setLoading(false);
+        // setLoading(false);
       } catch (err) {
         console.error(err);
       }
@@ -66,17 +65,37 @@ const HotCollections = () => {
         </div>
         <div>
           {loading ? (
-            <div className="row">
-              {new Array(skeletonCount).fill(0).map((_, index) => (
-                <div className="col-lg-3 col-md-4 col-sm-6" key={index}>
-                  <Skeleton width="100%" height="300px" borderRadius="10px" />
-                </div>
-              ))}
-            </div>
+            <OwlCarousel {...options}>
+              <div className="row">
+                {new Array(skeletonCount).fill(0).map((_, index) => (
+                  <div key={index} style={{ border: "none" }} className="nft_coll">
+                    <div className="nft_wrap">
+                      <Skeleton
+                        width="100%"
+                        height="200px"
+                        borderRadius="10px"
+                      />
+                    </div>
+                    <div className="nft_coll_pp">
+                      <Skeleton width="50px" height="50px" borderRadius="50%" />
+                      <i className="fa fa-check"></i>
+                    </div>
+                    <div className="nft_coll_info">
+                        <h4>
+                          <Skeleton width="120px" height="20px" />
+                        </h4>
+                      <span>
+                        <Skeleton width="80px" height="20px"/>
+                      </span>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </OwlCarousel>
           ) : (
             <OwlCarousel {...options}>
               {collections.map((collection) => (
-                <div style={{ padding: "0 10px" }} key={collection.id}>
+                <div key={collection.id}>
                   <div className="nft_coll">
                     <div className="nft_wrap">
                       <Link to="/item-details">

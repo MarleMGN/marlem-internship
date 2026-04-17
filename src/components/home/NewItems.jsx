@@ -1,6 +1,9 @@
 import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import axios from "axios";
+import OwlCarousel from "react-owl-carousel";
+import "owl.carousel/dist/assets/owl.carousel.css";
+import "owl.carousel/dist/assets/owl.theme.default.css";
 import Skeleton from "../UI/Skeleton";
 
 const API_URL =
@@ -34,12 +37,42 @@ const Countdown = ({ expiryDate }) => {
 const NewItems = () => {
   const [items, setItems] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [viewportWidth, setViewportWidth] = useState(window.innerWidth);
+
+  const options = {
+    loop: true,
+    margin: 10,
+    nav: true,
+    dots: true,
+    responsive: {
+      0: { items: 1 },
+      480: { items: 2 },
+      768: { items: 3 },
+      1024: { items: 4 },
+    },
+  };
+
+  useEffect(() => {
+      const onResize = () => setViewportWidth(window.innerWidth);
+      window.addEventListener("resize", onResize);
+      return () => window.removeEventListener("resize", onResize);
+    }, []);
+
+    const skeletonCount =
+    viewportWidth < 480
+      ? 1
+      : viewportWidth < 768
+        ? 2
+        : viewportWidth < 1024
+          ? 3
+          : 4;
 
   useEffect(() => {
     const fetchCollections = async () => {
       try {
         const res = await axios.get(API_URL);
         setItems(res.data);
+        console.log(res.data);
         setLoading(false);
       } catch (err) {
         console.error(err);
@@ -59,16 +92,16 @@ const NewItems = () => {
             </div>
           </div>
           {loading
-            ? Array(4)
+            ? Array(skeletonCount)
                 .fill(0)
                 .map((_, index) => (
                   <div className="col-lg-3 col-md-4 col-sm-6" key={index}>
                     <Skeleton width="100%" height="300px" borderRadius="10px" />
                   </div>
                 ))
-            : items.slice(0, 4).map((item) => (
+            : ( <OwlCarousel {...options}>
+              {items.map((item) => (
                 <div
-                  className="col-lg-3 col-md-6 col-sm-6 col-xs-12"
                   key={item.id}
                 >
                   <div className="nft__item">
@@ -117,12 +150,14 @@ const NewItems = () => {
                       <div className="nft__item_price">{item.price} ETH</div>
                       <div className="nft__item_like">
                         <i className="fa fa-heart"></i>
-                        <span>69</span>
+                        <span>{item.likes}</span>
                       </div>
                     </div>
                   </div>
                 </div>
               ))}
+            </OwlCarousel> 
+            )}
         </div>
       </div>
     </section>
