@@ -12,7 +12,7 @@ const TopSellers = () => {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const fetchCollections = async () => {
+    const fetchSellers = async () => {
       try {
         const res = await axios.get(API_URL);
         setTopSellers(res.data);
@@ -22,7 +22,7 @@ const TopSellers = () => {
         console.log(err);
       }
     };
-    fetchCollections();
+    fetchSellers();
   }, []);
 
   return (

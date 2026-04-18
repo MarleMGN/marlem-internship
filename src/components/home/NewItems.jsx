@@ -68,7 +68,7 @@ const NewItems = () => {
           : 4;
 
   useEffect(() => {
-    const fetchCollections = async () => {
+    const fetchItems = async () => {
       try {
         const res = await axios.get(API_URL);
         setItems(res.data);
@@ -78,7 +78,7 @@ const NewItems = () => {
         console.error(err);
       }
     };
-    fetchCollections();
+    fetchItems();
   }, []);
 
   return (
