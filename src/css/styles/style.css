@@ -13669,6 +13669,7 @@ a.read_more i {
   justify-content: center;
   position: relative;
   height: 350px;
+  overflow: hidden;
 }
 
 .nft__item_wrap a {
