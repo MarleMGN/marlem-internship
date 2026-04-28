@@ -5,7 +5,7 @@ import { Link, useParams } from "react-router-dom";
 import AuthorImage from "../images/author_thumbnail.jpg";
 import axios from "axios";
 
-const API_URL = "https://us-central1-nft-cloud-functions.cloudfunctions.net/author"
+const API_URL = "https://us-central1-nft-cloud-functions.cloudfunctions.net/authors"
 
 const Author = () => {
   const [author, setAuthor] = useState();
