@@ -92,23 +92,23 @@ const HotCollections = () => {
             </OwlCarousel>
           ) : (
             <OwlCarousel key="loaded" {...options}>
-              {collections.map((collection) => (
-                <div key={collection.id}>
+              {collections.map((item) => (
+                <div key={item.id}>
                   <div className="nft_coll">
                     <div className="nft_wrap">
-                      <Link to={`/item-details/${collection.id}`}>
+                      <Link to={`/item-details/${item.nftId}`}>
                         <img
-                          src={collection.nftImage}
+                          src={item.nftImage}
                           className="lazy img-fluid"
                           alt=""
                         />
                       </Link>
                     </div>
                     <div className="nft_coll_pp">
-                      <Link to={`/author/${collection.authorId}`}>
+                      <Link to={`/author/${item.authorId}`}>
                         <img
                           className="lazy pp-coll"
-                          src={collection.authorImage}
+                          src={item.authorImage}
                           alt=""
                         />
                       </Link>
@@ -116,9 +116,9 @@ const HotCollections = () => {
                     </div>
                     <div className="nft_coll_info">
                       <Link to="/explore">
-                        <h4>{collection.title}</h4>
+                        <h4>{item.title}</h4>
                       </Link>
-                      <span>{collection.code}</span>
+                      <span>{item.code}</span>
                     </div>
                   </div>
                 </div>
