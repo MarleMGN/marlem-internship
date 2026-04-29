@@ -74,11 +74,7 @@ const NewItems = () => {
                 .map((_, index) => (
                   <div key={index} className="nft__item">
                     <div className="author_list_pp">
-                      <Skeleton
-                        height="50px"
-                        width="50px"
-                        borderRadius="50%"
-                      />
+                      <Skeleton height="50px" width="50px" borderRadius="50%" />
                       <i className="fa fa-check"></i>
                     </div>
                     <div>
@@ -105,7 +101,7 @@ const NewItems = () => {
                   <div className="nft__item">
                     <div className="author_list_pp">
                       <Link
-                        to="/author"
+                        to={`/author/${item.authorId}`}
                         data-bs-toggle="tooltip"
                         data-bs-placement="top"
                         title="Creator: Monica Lucas"
