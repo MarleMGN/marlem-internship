@@ -84,6 +84,9 @@ const ExploreItems = () => {
               key={item.id}
               className="d-item col-lg-3 col-md-6 col-sm-6 col-xs-12"
               style={{ display: "block", backgroundSize: "cover" }}
+              data-aos="fade"
+              data-aos-duration="400"
+              data-aos-offset="100"
             >
               <div className="nft__item">
                 <div className="author_list_pp">
@@ -137,7 +140,11 @@ const ExploreItems = () => {
             </div>
           ))}
 
-      <div className="col-md-12 text-center">
+      <div
+        className="col-md-12 text-center"
+        data-aos="fade-up"
+        data-aos-duration="800"
+      >
         <button onClick={loadMore} className="btn-main lead">
           Load More
         </button>

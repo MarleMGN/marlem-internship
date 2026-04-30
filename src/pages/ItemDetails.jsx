@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react";
 import EthImage from "../images/ethereum.svg";
 import { Link, useParams } from "react-router-dom";
-import nftImage from "../images/nftImage.jpg";
 import axios from "axios";
 import Skeleton from "../components/UI/Skeleton";
 
@@ -17,7 +16,6 @@ const ItemDetails = () => {
     try {
       const res = await axios.get(`${API_URL}${nftId}`)
       setDetails(res.data);
-      console.log(res.data);
       setLoading(false);
     } catch (err) {
       console.log(err);

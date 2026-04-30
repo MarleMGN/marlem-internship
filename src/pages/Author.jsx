@@ -18,7 +18,6 @@ const Author = () => {
     try {
       const res = await axios.get(`${API_URL}?author=${authorId}`);
       setAuthor(res.data);
-      console.log(res.data);
       setLoading(false);
     } catch (err) {
       console.log(err);

@@ -48,7 +48,6 @@ const NewItems = () => {
       try {
         const res = await axios.get(API_URL);
         setItems(res.data);
-        console.log(res.data);
         setLoading(false);
       } catch (err) {
         console.error(err);
@@ -63,7 +62,9 @@ const NewItems = () => {
         <div className="row">
           <div className="col-lg-12">
             <div className="text-center">
-              <h2>New Items</h2>
+              <h2 data-aos="zoom-in" data-aos-duration="800">
+                New Items
+              </h2>
               <div className="small-border bg-color-2"></div>
             </div>
           </div>
@@ -95,7 +96,7 @@ const NewItems = () => {
                 ))}
             </OwlCarousel>
           ) : (
-            <OwlCarousel key="loaded" {...options}>
+            <OwlCarousel data-aos="fade-up" data-aos-duration="800" key="loaded" {...options}>
               {items.map((item) => (
                 <div key={item.id}>
                   <div className="nft__item">

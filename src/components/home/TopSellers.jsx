@@ -15,7 +15,6 @@ const TopSellers = () => {
       try {
         const res = await axios.get(API_URL);
         setTopSellers(res.data);
-        console.log(res.data);
         setLoading(false);
       } catch (err) {
         console.log(err);
@@ -30,7 +29,7 @@ const TopSellers = () => {
         <div className="row">
           <div className="col-lg-12">
             <div className="text-center">
-              <h2>Top Sellers</h2>
+              <h2 data-aos="zoom-in" data-aos-duration="800">Top Sellers</h2>
               <div className="small-border bg-color-2"></div>
             </div>
           </div>
@@ -57,7 +56,7 @@ const TopSellers = () => {
             ) : (
               <ol className="author_list">
                 {topSellers.map((item) => (
-                  <li key={item.id}>
+                  <li key={item.id} data-aos="fade" data-aos-duration="400" data-aos-offset="100">
                     <div className="author_list_pp">
                       <Link to={`/author/${item.authorId}`}>
                         <img
