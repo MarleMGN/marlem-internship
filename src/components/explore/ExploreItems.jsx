@@ -139,16 +139,17 @@ const ExploreItems = () => {
               </div>
             </div>
           ))}
-
-      <div
-        className="col-md-12 text-center"
-        data-aos="fade-up"
-        data-aos-duration="800"
-      >
-        <button onClick={loadMore} className="btn-main lead">
-          Load More
-        </button>
-      </div>
+      {explore.length > visible && (
+        <div
+          className="col-md-12 text-center"
+          data-aos="fade-up"
+          data-aos-duration="800"
+        >
+          <button onClick={loadMore} className="btn-main lead">
+            Load More
+          </button>
+        </div>
+      )}
     </>
   );
 };
